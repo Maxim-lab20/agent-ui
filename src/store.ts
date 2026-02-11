@@ -113,12 +113,18 @@ export const useStore = create<Store>()(
       partialize: (state) => ({
         selectedEndpoint: state.selectedEndpoint
       }),
-      migrate: (persistedState: any, version: number) => {
+      migrate: (persistedState: unknown) => {
+        const state = persistedState as
+          | { selectedEndpoint?: string }
+          | undefined
         // Migration to update old endpoints to the new Cloud Run URL
-        if (persistedState.selectedEndpoint) {
-          const oldEndpoints = ['http://localhost:7777', 'http://localhost:7778']
-          if (oldEndpoints.includes(persistedState.selectedEndpoint)) {
-            persistedState.selectedEndpoint =
+        if (state?.selectedEndpoint) {
+          const oldEndpoints = [
+            'http://localhost:7777',
+            'http://localhost:7778'
+          ]
+          if (oldEndpoints.includes(state.selectedEndpoint)) {
+            state.selectedEndpoint =
               'https://agno-agent-os-388349760951.us-central1.run.app'
           }
         }
