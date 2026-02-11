@@ -81,7 +81,8 @@ export const useStore = create<Store>()(
             typeof messages === 'function' ? messages(state.messages) : messages
         })),
       chatInputRef: { current: null },
-      selectedEndpoint: 'https://agno-agent-os-388349760951.us-central1.run.app',
+      selectedEndpoint:
+        'https://agno-agent-os-388349760951.us-central1.run.app',
       setSelectedEndpoint: (selectedEndpoint) =>
         set(() => ({ selectedEndpoint })),
       authToken: '',
