@@ -108,11 +108,22 @@ export const useStore = create<Store>()(
         set(() => ({ isSessionsLoading }))
     }),
     {
-      name: 'endpoint-storage',
+      name: 'agent-ui-storage',
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         selectedEndpoint: state.selectedEndpoint
       }),
+      migrate: (persistedState: any, version: number) => {
+        // Migration to update old endpoints to the new Cloud Run URL
+        if (persistedState.selectedEndpoint) {
+          const oldEndpoints = ['http://localhost:7777', 'http://localhost:7778']
+          if (oldEndpoints.includes(persistedState.selectedEndpoint)) {
+            persistedState.selectedEndpoint =
+              'https://agno-agent-os-388349760951.us-central1.run.app'
+          }
+        }
+        return persistedState
+      },
       onRehydrateStorage: () => (state) => {
         state?.setHydrated?.()
       }
